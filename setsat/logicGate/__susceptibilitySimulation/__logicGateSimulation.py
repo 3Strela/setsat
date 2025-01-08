@@ -1,8 +1,8 @@
-from setsat.__initialSettings.logicGateGraph.logicGateGraph import LogicGateGraph
+from setsat.logicGate.__initialSettings.logicGateGraph.logicGateGraph import LogicGateGraph
 
-from setsat.dataTypes.logicGateBehavior_t import LogicGateBehavior_t
-from setsat.dataTypes.logicGateNode_t     import LogicGateNode_t
-from setsat.dataTypes.polygonLabel_t      import PolygonLabel_t
+from setsat.logicGate.dataTypes.logicGateBehavior_t import LogicGateBehavior_t
+from setsat.logicGate.dataTypes.logicGateNode_t     import LogicGateNode_t
+from setsat.logicGate.dataTypes.polygonLabel_t      import PolygonLabel_t
 
 import heapq
 

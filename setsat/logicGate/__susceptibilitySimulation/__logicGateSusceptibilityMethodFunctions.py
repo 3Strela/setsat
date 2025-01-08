@@ -1,5 +1,5 @@
-from setsat.dataTypes.logicGateBehavior_t import LogicGateBehavior_t
-from setsat.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
+from setsat.logicGate.dataTypes.logicGateBehavior_t import LogicGateBehavior_t
+from setsat.logicGate.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
 
 #########################################
 ### +++++++++++ CONSTANTS +++++++++++ ###
@@ -15,13 +15,14 @@ def ProbabilisticTransferMatrix(cellName: str,
                                 logicGatePolygons: LogicGatePolygons_t,
                                 logicGateBehavior: LogicGateBehavior_t, 
                                 particleFlux: float, gdsUnit: float) -> None:
-    raise NotImplementedError
+    pass
 
 def SensitiveNodesByInputVector(cellName: str,
                                 logicGatePolygons: LogicGatePolygons_t,
                                 logicGateBehavior: LogicGateBehavior_t, 
                                 particleFlux: float, gdsUnit: float) -> None:
-    with open('SensitiveNodesByInputVector.tsv', 'a') as tsvFile:
+    
+    with open('LogicGatesSensitiveNodesByInputVector.tsv', 'a') as tsvFile:
         inputVectorOrder = ''.join(logicGateBehavior.inputPinList)
         tsvFile.write(f'{cellName}\nInputVector({inputVectorOrder})\n')
     
@@ -29,7 +30,7 @@ def SensitiveNodesByInputVector(cellName: str,
     totalNumberOfInputs = logicGateBehavior.totalNumberOfInputs
 
     sensitiveNodes = logicGateBehavior.sensitiveNodes
-    with open('SensitiveNodesByInputVector.tsv', 'a') as tsvFile:        
+    with open('LogicGatesSensitiveNodesByInputVector.tsv', 'a') as tsvFile:        
         for i in range(totalNumberOfInputs):
             binaryInputVector = bin(i).split('b')[1].zfill(numberOfBits)
 
@@ -37,11 +38,12 @@ def SensitiveNodesByInputVector(cellName: str,
             for j, logicGateOutput in enumerate(sensitiveNodes[binaryInputVector]):
                 sensitiveNodeList = sensitiveNodes[binaryInputVector][logicGateOutput]
 
-                sensitiveNodesStr = f'|{logicGateOutput}\t'.join(sensitiveNodeList) + '|' + str(logicGateOutput) + '\n'
+                sensitiveNodesStr = f'|{logicGateOutput}\t'.join(sensitiveNodeList) + '|' + str(logicGateOutput)
                 tsvFile.write(sensitiveNodesStr)
 
                 if j != len(sensitiveNodes[binaryInputVector]) - 1:
                     tsvFile.write('\t')
+            tsvFile.write('\n')
         
         tsvFile.write('\n')
         for nodePolygon in logicGatePolygons.logicGateNodePolygonList:
@@ -58,7 +60,7 @@ def SusceptibilityByInputVector(cellName: str,
                                 logicGateBehavior: LogicGateBehavior_t, 
                                 particleFlux: float, gdsUnit: float) -> None:
     
-    with open('SusceptibilityByInputVector.tsv', 'a') as tsvFile:
+    with open('LogicGatesSusceptibilityByInputVector.tsv', 'a') as tsvFile:
         inputVectorOrder = ''.join(logicGateBehavior.inputPinList)
         logicGateOutputs = '\t\t\t\t'.join(logicGateBehavior.outputPinList)
 
@@ -74,7 +76,7 @@ def SusceptibilityByInputVector(cellName: str,
     totalNumberOfInputs = logicGateBehavior.totalNumberOfInputs
 
     sensitiveNodes = logicGateBehavior.sensitiveNodes
-    with open('SusceptibilityByInputVector.tsv', 'a') as tsvFile:        
+    with open('LogicGatesSusceptibilityByInputVector.tsv', 'a') as tsvFile:        
         for i in range(totalNumberOfInputs):
             binaryInputVector = bin(i).split('b')[1].zfill(numberOfBits)
             

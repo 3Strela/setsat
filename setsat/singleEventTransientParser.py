@@ -1,16 +1,21 @@
 from gdstk import Cell, read_gds
 
-from setsat.__initialSettings.extractPolygons.extractInterestLayers import ExtractInterestLayerPolygons
-from setsat.__initialSettings.extractPolygons.extractNodePolygons   import ExtractNodePolygons
-from setsat.__initialSettings.logicGateGraph.logicGateGraph         import LogicGateGraph
+from setsat.circuit.circuitParser import CircuitParser
 
-from setsat.__susceptibilitySimulation.susceptibilitySimulation import GenerateTruthTable, SusceptibilitySimulation
+from setsat.logicGate.__initialSettings.extractPolygons.extractInterestLayers import ExtractInterestLayerPolygons
+from setsat.logicGate.__initialSettings.extractPolygons.extractNodePolygons   import ExtractNodePolygons
+from setsat.logicGate.__initialSettings.logicGateGraph.logicGateGraph         import LogicGateGraph
 
-from setsat.dataTypes.componentID_e        import ComponentID_e
-from setsat.dataTypes.susceptibilityMethod import SusceptibilityMethod_e
-from setsat.dataTypes.standardCellLibrary  import StandardCellLibrary_t
+from setsat.logicGate.__susceptibilitySimulation.susceptibilitySimulation import GenerateTruthTable, SusceptibilitySimulation
 
-import setsat.__susceptibilitySimulation.susceptibilityMethodFunctions as susceptibilityFunctions
+from setsat.logicGate.dataTypes.componentID_e        import ComponentID_e
+from setsat.logicGate.dataTypes.standardCellLibrary  import StandardCellLibrary_t
+
+from setsat.logicGate.__susceptibilitySimulation.logicGateSusceptibilityMethod import LogicGateSusceptibilityMethod_e
+import setsat.logicGate.__susceptibilitySimulation.__logicGateSusceptibilityMethodFunctions as logicGateSusceptibilityMethod
+
+from setsat.circuit.circuitSusceptibilityMethod import CircuitSusceptibilityMethod_e
+import setsat.circuit.__circuitSusceptibilityMethodFunctions as circuitSusceptibilityMethod
 
 import numpy as np
 
@@ -19,14 +24,15 @@ class SingleEventTransientParser:
 
     def __init__(self, cellLibrary: StandardCellLibrary_t) -> None:
         self.__cellList: list[Cell] = []
-        self.__cellLibrary = cellLibrary
-        self.__unit        = None
+        self.__cellLibrary   = cellLibrary
+        self.__circuitParser = None
+        self.__unit          = None
 
     ##############################################
     ### +++++++++++ PUBLIC METHODS +++++++++++ ###
     ##############################################
 
-    def AddGDSToAnalisis(self, gdsFilePath: str, targetCellList: list[str] = None) -> None:
+    def AddCellLayoutToAnalisis(self, gdsFilePath: str, targetCellList: list[str] = None) -> None:
         gdsFile     = read_gds(gdsFilePath)
         self.__unit = gdsFile.unit
 
@@ -36,6 +42,25 @@ class SingleEventTransientParser:
                 self.__cellList.append(cell)
             elif cell.name in targetCellSet:
                 self.__cellList.append(cell)
+
+    def AddCircuitVerilog(self, verilogFilePath: str) -> None:
+        self.__circuitParser = CircuitParser(verilogFilePath, self.__cellList, self.__cellLibrary, self.__unit)
+
+    def ComputeCircuitSusceptibility(self, particleFlux: float, 
+                                     susceptibilityMethod: CircuitSusceptibilityMethod_e) -> None:
+        match susceptibilityMethod:
+            case CircuitSusceptibilityMethod_e.SENSITIVE_GATES_BY_INPUT_VECTOR:
+                methodFunction = circuitSusceptibilityMethod.SensitiveGatesByInputVector
+            case _:
+                raise NotImplementedError
+        
+        with open('Circuit' + str(methodFunction.__name__) + '.tsv', 'w') as tsvFile:
+            pass
+
+        methodFunction(self.__circuitParser, particleFlux, self.__unit)
+    
+    def ComputeCircuitTruthTable(self) -> None:
+        raise NotImplementedError
 
     def ComputeLogicGatesArea(self) -> None:
         with open('LogicGatesArea.tsv', 'w') as tsvFile:
@@ -58,18 +83,18 @@ class SingleEventTransientParser:
                 tsvFile.write(f"{cell.name}\t{area}\n")
     
     def ComputeLogicGatesSusceptibility(self, particleFlux: float, 
-                                        susceptibilityMethod: SusceptibilityMethod_e) -> None:
-        match susceptibilityMethod:
-            case SusceptibilityMethod_e.SENSITIVE_NODES_BY_INPUT_VECTOR:
-                methodFunction = susceptibilityFunctions.SensitiveNodesByInputVector
-            case SusceptibilityMethod_e.SUSCEPTIBILITY_BY_INPUT_VECTOR:
-                methodFunction = susceptibilityFunctions.SusceptibilityByInputVector
-            case SusceptibilityMethod_e.PROBABILISTIC_TRANSFER_MATRIX:
-                methodFunction = susceptibilityFunctions.ProbabilisticTransferMatrix
+                                        logicGatesusceptibilityMethod: LogicGateSusceptibilityMethod_e) -> None:
+        match logicGatesusceptibilityMethod:
+            case LogicGateSusceptibilityMethod_e.SENSITIVE_NODES_BY_INPUT_VECTOR:
+                methodFunction = logicGateSusceptibilityMethod.SensitiveNodesByInputVector
+            case LogicGateSusceptibilityMethod_e.SUSCEPTIBILITY_BY_INPUT_VECTOR:
+                methodFunction = logicGateSusceptibilityMethod.SusceptibilityByInputVector
+            case LogicGateSusceptibilityMethod_e.PROBABILISTIC_TRANSFER_MATRIX:
+                methodFunction = logicGateSusceptibilityMethod.ProbabilisticTransferMatrix
             case _:
                 raise NotImplementedError
         
-        with open(str(methodFunction.__name__) + '.tsv', 'w') as tsvFile:
+        with open('LogicGates' + str(methodFunction.__name__) + '.tsv', 'w') as tsvFile:
             pass
 
         for cell in self.__cellList:
@@ -79,7 +104,7 @@ class SingleEventTransientParser:
 
             methodFunction(cell.name, logicGatePolygons, logicGateBehavior, particleFlux, self.__unit)
 
-    def ShowTruthTable(self) -> None:
+    def ComputeLogicGatesTruthTable(self) -> None:
         with open('LogicGatesTruthTable.tsv', 'w') as tsvFile:
             for cell in self.__cellList:
                 logicGateGraph    = self.__BuildLogicGateGraph(cell)
@@ -107,7 +132,7 @@ class SingleEventTransientParser:
                     
                 tsvFile.write('\n')
 
-    def ResetGDSToAnalisis(self) -> None:
+    def ResetCellLayoutToAnalisis(self) -> None:
         self.__cellList = []
 
     ##############################################
@@ -123,7 +148,6 @@ class SingleEventTransientParser:
         # Building logic gate graph
         logicGateGraph = LogicGateGraph(logicGatePolygons)
         return logicGateGraph
-
 
 ######################################
 ### @Author: Mateus Estrêla Pietro ###

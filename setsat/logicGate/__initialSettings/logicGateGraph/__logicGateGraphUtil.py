@@ -1,8 +1,8 @@
 from gdstk import Polygon
 from shapely import Polygon as gPolygon
 
-from SETtoolKit.dataTypes.polygonLabel_t  import PolygonLabel_t
-from SETtoolKit.dataTypes.logicGateNode_t import LogicGateNode_t
+from setsat.logicGate.dataTypes.polygonLabel_t  import PolygonLabel_t
+from setsat.logicGate.dataTypes.logicGateNode_t import LogicGateNode_t
 
 import numpy as np
 

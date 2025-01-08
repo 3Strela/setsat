@@ -3,10 +3,10 @@ from gdstk import Cell, Polygon
 from shapely.geometry import Polygon as gPolygon
 from shapely.ops      import unary_union
 
-from setsat.dataTypes.componentID_e       import ComponentID_e
-from setsat.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
-from setsat.dataTypes.polygonLabel_t      import PolygonLabel_t
-from setsat.dataTypes.standardCellLibrary import StandardCellLibrary_t
+from setsat.logicGate.dataTypes.componentID_e       import ComponentID_e
+from setsat.logicGate.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
+from setsat.logicGate.dataTypes.polygonLabel_t      import PolygonLabel_t
+from setsat.logicGate.dataTypes.standardCellLibrary import StandardCellLibrary_t
 
 import matplotlib.pyplot as plt
 

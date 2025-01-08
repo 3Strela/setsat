@@ -2,9 +2,9 @@ from gdstk import Polygon
 
 from shapely.geometry import LineString, Polygon as gPolygon
 
-from setsat.dataTypes.logicGateNode_t     import LogicGateNode_t
-from setsat.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
-from setsat.dataTypes.polygonLabel_t      import PolygonLabel_t
+from setsat.logicGate.dataTypes.logicGateNode_t     import LogicGateNode_t
+from setsat.logicGate.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
+from setsat.logicGate.dataTypes.polygonLabel_t      import PolygonLabel_t
 
 ################################################
 ### +++++++++++ PUBLIC FUNCTIONS +++++++++++ ###

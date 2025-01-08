@@ -1,7 +1,7 @@
 from gdstk import Polygon
 
-from setsat.dataTypes.componentID_e   import ComponentID_e 
-from setsat.dataTypes.logicGateNode_t import LogicGateNode_t
+from setsat.logicGate.dataTypes.componentID_e   import ComponentID_e 
+from setsat.logicGate.dataTypes.logicGateNode_t import LogicGateNode_t
 
 class PolygonLabel_t:
     def __init__(self, polygon: Polygon, label: str|None, componentID: ComponentID_e) -> None:

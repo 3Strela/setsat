@@ -1,9 +1,9 @@
-from SETtoolKit.dataTypes.componentID_e       import ComponentID_e
-from SETtoolKit.dataTypes.logicGateNode_t     import LogicGateNode_t
-from SETtoolKit.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
-from SETtoolKit.dataTypes.polygonLabel_t      import PolygonLabel_t
+from setsat.logicGate.dataTypes.componentID_e       import ComponentID_e
+from setsat.logicGate.dataTypes.logicGateNode_t     import LogicGateNode_t
+from setsat.logicGate.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
+from setsat.logicGate.dataTypes.polygonLabel_t      import PolygonLabel_t
 
-import SETtoolKit.__initialSettings.logicGateGraph.__logicGateGraphUtil as lggUtil
+import setsat.logicGate.__initialSettings.logicGateGraph.__logicGateGraphUtil as lggUtil
 
 import heapq
 import numpy as np

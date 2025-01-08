@@ -1,8 +1,8 @@
 from gdstk import Polygon
 
-from setsat.dataTypes.componentID_e   import ComponentID_e
-from setsat.dataTypes.logicGateNode_t import LogicGateNode_t
-from setsat.dataTypes.polygonLabel_t  import PolygonLabel_t
+from setsat.logicGate.dataTypes.componentID_e   import ComponentID_e
+from setsat.logicGate.dataTypes.logicGateNode_t import LogicGateNode_t
+from setsat.logicGate.dataTypes.polygonLabel_t  import PolygonLabel_t
 
 class LogicGatePolygons_t:
     def __init__(self,) -> None:

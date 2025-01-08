@@ -1,4 +1,4 @@
-from setsat.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
+from setsat.logicGate.dataTypes.logicGatePolygons_t import LogicGatePolygons_t
 
 class LogicGateBehavior_t:
     def __init__(self, logicGatePolygons: LogicGatePolygons_t) -> None:
