@@ -1,13 +1,17 @@
-# python circuitAnalisis.py < targetCells\Nangate_45nm.txt
+# python circuitAnalisis.py < targetCells.txt
 
 from setsat.circuit.circuitSusceptibilityMethod import CircuitSusceptibilityMethod_e
 from setsat.logicGate.dataTypes.standardCellLibrary import StandardCellLibrary_t, CellTechnology_e
 from setsat.singleEventTransientParser import SingleEventTransientParser
 
-import time
-import datetime
+# cellTechnology = CellTechnology_e.CMOS_NANGATE_15_NANOMETERS
+# gdsFilePath    = 'cellLib/NanGate_15nm_OCL.gds'
 
 cellTechnology = CellTechnology_e.CMOS_NANGATE_45_NANOMETERS
+gdsFilePath    = 'cellLib/NangateOpenCellLibrary.gds'
+
+# cellTechnology = CellTechnology_e.BICMOS_IHP_130_NANOMETERS
+# gdsFilePath    = 'cellLib/sg13g2_stdcell.gds'
 
 cellLibrary  = StandardCellLibrary_t(cellTechnology)
 setParser    = SingleEventTransientParser(cellLibrary)
@@ -20,14 +24,16 @@ while True:
     except EOFError:
         break
 
-gdsFilePath = 'cellLib/NangateOpenCellLibrary.gds'
+
 setParser.AddCellLayoutToAnalisis(gdsFilePath, targetCellList)
 
-verilogFilePath = 'circuitVerilog/c17_minimal.v'
-# verilogFilePath = 'circuitVerilog/c432_minimal.v'
+
+verilogFilePath = 'circuitVerilog/c17.v'
 setParser.AddCircuitVerilog(verilogFilePath)
 
 
-particleFlux = 3.6e-09
+setParser.ComputeCircuitArea()
+setParser.ComputeCircuitDistinctGates()
+
 susceptibilityMethod = CircuitSusceptibilityMethod_e.SENSITIVE_GATES_BY_INPUT_VECTOR
-setParser.ComputeCircuitSusceptibility(particleFlux, susceptibilityMethod)
+setParser.ComputeCircuitSusceptibility(susceptibilityMethod)
