@@ -46,8 +46,8 @@ class SingleEventTransientParser:
     def AddCircuitVerilog(self, verilogFilePath: str) -> None:
         self.__circuitParser = CircuitParser(verilogFilePath, self.__cellList, self.__cellLibrary, self.__unit)
 
-    def ComputeCircuitSusceptibility(self, particleFlux: float, 
-                                     susceptibilityMethod: CircuitSusceptibilityMethod_e) -> None:
+    def ComputeCircuitSusceptibility(self, susceptibilityMethod: CircuitSusceptibilityMethod_e,
+                                        particleFlux: float|None = None) -> None:
         match susceptibilityMethod:
             case CircuitSusceptibilityMethod_e.SENSITIVE_GATES_BY_INPUT_VECTOR:
                 methodFunction = circuitSusceptibilityMethod.SensitiveGatesByInputVector
@@ -82,8 +82,8 @@ class SingleEventTransientParser:
                 
                 tsvFile.write(f"{cell.name}\t{area}\n")
     
-    def ComputeLogicGatesSusceptibility(self, particleFlux: float, 
-                                        logicGatesusceptibilityMethod: LogicGateSusceptibilityMethod_e) -> None:
+    def ComputeLogicGatesSusceptibility(self, logicGatesusceptibilityMethod: LogicGateSusceptibilityMethod_e,
+                                        particleFlux: float|None = None) -> None:
         match logicGatesusceptibilityMethod:
             case LogicGateSusceptibilityMethod_e.SENSITIVE_NODES_BY_INPUT_VECTOR:
                 methodFunction = logicGateSusceptibilityMethod.SensitiveNodesByInputVector
